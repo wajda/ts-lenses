@@ -257,5 +257,39 @@ describe('Lenses', () => {
             assert.deepEqual(compositeLens.set({}, 42), {a: {b: {c: 42}}})
             assert.equal(compositeLens.get({a: {b: {c: 42}}}), 42)
         })
+
+        it('should be associative', () => {
+            const originalObj = {a: 1, foo: {b: 2, bar: {c: 3, baz: 42}}}
+            const expectedObj = {a: 1, foo: {b: 2, bar: {c: 3, baz: 777}}}
+
+            const fooBarBazLens1 = lens.of("foo").compose(lens.of("bar.baz"))
+            const fooBarBazLens2 = lens.of("foo").compose(lens.of("bar").compose(lens.of("baz")))
+            const fooBarBazLens3 = (lens.of("foo").compose(lens.of("bar"))).compose(lens.of("baz"))
+            const fooBarBazLens4 = lens.of("foo").focus("bar").focus("baz")
+            const fooBarBazLens5 = lens.of("foo").focus("bar.baz")
+            const fooBarBazLens6 = lens.of("foo.bar").focus("baz")
+            const fooBarBazLens7 = lens.of("foo.bar.baz")
+
+            assert.deepEqual(fooBarBazLens1.get(originalObj), 42)
+            assert.deepEqual(fooBarBazLens1.set(originalObj, 777), expectedObj)
+
+            assert.deepEqual(fooBarBazLens2.get(originalObj), 42)
+            assert.deepEqual(fooBarBazLens2.set(originalObj, 777), expectedObj)
+
+            assert.deepEqual(fooBarBazLens3.get(originalObj), 42)
+            assert.deepEqual(fooBarBazLens3.set(originalObj, 777), expectedObj)
+
+            assert.deepEqual(fooBarBazLens4.get(originalObj), 42)
+            assert.deepEqual(fooBarBazLens4.set(originalObj, 777), expectedObj)
+
+            assert.deepEqual(fooBarBazLens5.get(originalObj), 42)
+            assert.deepEqual(fooBarBazLens5.set(originalObj, 777), expectedObj)
+
+            assert.deepEqual(fooBarBazLens6.get(originalObj), 42)
+            assert.deepEqual(fooBarBazLens6.set(originalObj, 777), expectedObj)
+
+            assert.deepEqual(fooBarBazLens7.get(originalObj), 42)
+            assert.deepEqual(fooBarBazLens7.set(originalObj, 777), expectedObj)
+        })
     })
 })
