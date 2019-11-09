@@ -74,3 +74,5 @@ shortContactInfoProjection.set(personInfo, "John", "Smith", 111222333444, "jsmit
 1. [Optimization] Do not copy an object if the current value is equal to the updating value.
 
 1. Performance testing
+
+1. Typing

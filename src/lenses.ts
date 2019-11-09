@@ -8,13 +8,12 @@ export function composition<A, B>(...lenses: Lens<any, any>[]): Lens<A, B> {
     return lenses.reduce((acc, li) => new CompositeLens(acc, li))
 }
 
-export function projection<A>(...innerLenses: Lens<A, any>[]): Lens<any, any> {
-    return new ProjectorLens((innerLenses as any)
+export function projection<A, B>(...innerLenses: Lens<A, any>[]): Lens<A, B> {
+    return <any>new ProjectorLens((innerLenses as any)
         .flatMap(li => li.constructor == ProjectorLens
             ? (li as ProjectorLens<A, any>).lenses
             : li
-        )
-    )
+        ))
 }
 
 export abstract class Lens<A, B> {
