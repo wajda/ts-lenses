@@ -1,13 +1,11 @@
 export function of<A, B>(path: string): Lens<A, B> {
-    return path
+    return composition(...path
         .split(".")
-        .map(prop => new PropertyLens(prop))
-        .reduce((acc, li) => acc.compose(li)) as Lens<A, B>
+        .map(prop => new PropertyLens(prop)))
 }
 
-export function composition<A, B>(lens0: Lens<A, any>, lens1: Lens<any, any>, ...otherLenses: Lens<any, any>[]) {
-    return [lens0, lens1, ...otherLenses]
-        .reduce((acc, li) => new CompositeLens(acc, li))
+export function composition<A, B>(...lenses: Lens<any, any>[]): Lens<A, B> {
+    return lenses.reduce((acc, li) => new CompositeLens(acc, li))
 }
 
 export function projection<A>(...innerLenses: Lens<A, any>[]): Lens<any, any> {

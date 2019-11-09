@@ -16,12 +16,15 @@ const myLens = lens.of("a.b.c")
 // Use the lens to get or set a nested value
 myLens.get( {a: {b: {c: 42}}} )     // returns 42
 myLens.set( {a: {b: {c: 42}}}, 777) // returns {a: {b: {c: 777}}}
+
+// missing properties are created
+myLens.set({}, 777) // still returns {a: {b: {c: 777}}}
 ```
 _set()_ method is a pure function. It creates shallow copies of objects along the path. 
 
 ## Lens compositions
 ```typescript
-const fooBarBazLens = lens.composition(lens.of("foo"), lens.of("bar"), lens.of("baz")) // or...
+const fooBarBazLens = lens.composition(lens.of("foo"), lens.of("bar"), lens.of("baz"))  // or...
 const fooBarBazLens = lens.of("foo.bar").compose(lens.of("baz"))
 
 // lens compositions are associative:
@@ -29,7 +32,7 @@ const fooBarBazLens = lens.of("foo").compose(lens.of("bar.baz"))                
 const fooBarBazLens = lens.of("foo").compose(lens.of("bar").compose(lens.of("baz")))    // is the same as...
 const fooBarBazLens = (lens.of("foo").compose(lens.of("bar"))).compose(lens.of("baz"))  // is the same as...
 const fooBarBazLens = lens.of("foo").focus("bar").focus("baz")                          // is the same as...
-const fooBarBazLens = lens.of("foo").focus("bar.baz")                                  // is the same as...
+const fooBarBazLens = lens.of("foo").focus("bar.baz")                                   // is the same as...
 const fooBarBazLens = lens.of("foo.bar.baz")
 ```
 
